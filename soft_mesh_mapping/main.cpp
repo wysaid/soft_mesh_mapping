@@ -1,6 +1,7 @@
 //By wysaid
 //blog: http://wysaid.org
-//depend: Easy Graphics Engine: https://github.com/misakamm/xege/ or http://xege.org
+//dependency: Easy Graphics Engine: https://github.com/misakamm/xege/ or http://xege.org
+//tips: This demo is compatible with vc6.0. Just create a project and copy the source code.
 
 #define SHOW_CONSOLE
 #define _CRT_SECURE_NO_WARNINGS
