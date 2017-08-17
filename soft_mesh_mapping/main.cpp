@@ -1,4 +1,4 @@
-//By wysaid
+ï»¿//By wysaid
 //blog: http://wysaid.org
 //dependency: Easy Graphics Engine: https://github.com/misakamm/xege/ or http://xege.org
 //tips: This demo is compatible with vc6.0. Just create a project and copy the source code.
@@ -9,6 +9,7 @@
 #include <vector>
 #include <cmath>
 #include <cassert>
+#include <cstdio>
 
 using namespace std;
 
@@ -99,7 +100,7 @@ public:
                 dx += (m_vec[m_index][h - m_width].x + m_vec[m_index][h + m_width].x - m_vec[m_index][h].x * 2.0f);
                 dy += (m_vec[m_index][h - m_width].y + m_vec[m_index][h + m_width].y - m_vec[m_index][h].y * 2.0f);
 
-                //Ä£ÄâÄÜÁ¿ËğÊ§£¬ µ±¼ÓËÙ¶È·½ÏòÓëËÙ¶È·½ÏòÏà·´Ê±£¬¼Ó¿ì¼õËÙ
+                //æ¨¡æ‹Ÿèƒ½é‡æŸå¤±ï¼Œ å½“åŠ é€Ÿåº¦æ–¹å‘ä¸é€Ÿåº¦æ–¹å‘ç›¸åæ—¶ï¼ŒåŠ å¿«å‡é€Ÿ
                 if(((unsigned&)dx >> 31) != ((unsigned&)m_vec[m_index][h].dx >> 31))
                     dx *= 1.0f + m_intensity;
 
@@ -297,9 +298,9 @@ public:
     {
         std::vector<Point>& vec = m_vec[m_index];
         int sz = vec.size();
-        int i; //i±äÁ¿Ç°ÖÃ, ·½±ãvc6.0 ±àÒë
+        int i; //iå˜é‡å‰ç½®, æ–¹ä¾¿vc6.0 ç¼–è¯‘
         m_pointCache.resize(sz);
-#if _MSC_VER < 1600 //¼æÈİvc6.0
+#if _MSC_VER < 1600 //å…¼å®¹vc6.0
         Point* v = &m_pointCache[0];
         memcpy(v, &vec[0], sz * sizeof(vec[0]));
 #else
@@ -412,7 +413,7 @@ PIMAGE loadTexture()
     PIMAGE pimg = NULL;
 
     setcolor(RED);
-    outtextxy(100, 100, "°´ÈÎÒâ¼üÑ¡ÔñÒ»ÕÅÍ¼Æ¬²ÅÄÜ½øÈëÏÂÒ»²½");
+    outtextxy(100, 100, "æŒ‰ä»»æ„é”®é€‰æ‹©ä¸€å¼ å›¾ç‰‡æ‰èƒ½è¿›å…¥ä¸‹ä¸€æ­¥");
 
     do
     {
@@ -435,9 +436,9 @@ PIMAGE loadTexture()
 
 int main()
 {
-    const char* showMsgRule = "Ê¹ÓÃÊó±êÍÏ¶¯¿É±ä»»Íø¸ñ. µ±Ç°Íø¸ñÇ¿¶È£º%g";
-    const char* infoMsg = "°´'+'»òÕß'-'¿ÉÒÔÔö´ó»òÕß¼õĞ¡Íø¸ñµ¯Á¦£¡Õâ¸ö°æ±¾ÓÉwysaidÖÆ×÷£¬ ²Î¼û: http://blog.wysaid.org";
-    const char* titleMsg = "EGEÍø¸ñ By wysaid";
+    const char* showMsgRule = "ä½¿ç”¨é¼ æ ‡æ‹–åŠ¨å¯å˜æ¢ç½‘æ ¼. å½“å‰ç½‘æ ¼å¼ºåº¦ï¼š%g";
+    const char* infoMsg = "æŒ‰'+'æˆ–è€…'-'å¯ä»¥å¢å¤§æˆ–è€…å‡å°ç½‘æ ¼å¼¹åŠ›ï¼è¿™ä¸ªç‰ˆæœ¬ç”±wysaidåˆ¶ä½œï¼Œ å‚è§: http://blog.wysaid.org";
+    const char* titleMsg = "EGEç½‘æ ¼ By wysaid";
 
     initgraph(800, 600, INIT_RENDERMANUAL);
     setcaption(titleMsg);
