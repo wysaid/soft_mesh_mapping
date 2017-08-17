@@ -50,7 +50,7 @@ public:
         m_texture = inputTexture;
         m_texWidth = getwidth(m_texture);
         m_texHeight = getheight(m_texture);
-        m_textureData = getbuffer(m_texture);
+        m_textureData = (color_t*)getbuffer(m_texture);
 
         m_outputTarget = outputTarget;
         m_outputWidth = getwidth(m_outputTarget);
@@ -88,7 +88,6 @@ public:
 
         for(int i = 1; i < m_height - 1; ++i)
         {
-            //const float heightI = i * heightStep;
             const int k = m_width * i;
             for(int j = 1; j < m_width - 1; ++j)
             {
@@ -205,7 +204,7 @@ public:
         float vL = v0.v, vR = v2.v;
 
         const color_t* data = m_textureData;
-        color_t* outputBuffer = getbuffer(m_outputTarget);
+        color_t* outputBuffer = (color_t*)getbuffer(m_outputTarget);
 
         if(v0.y < v1.y)
         {
@@ -251,8 +250,6 @@ public:
                     int ww = u * m_texWidth;
                     int hh = v * m_texHeight;
                     int index = ww + hh * m_texWidth;
-                    //                     color_t c = data[index];
-                    //                     putpixel(j, i, c);
                     outputBuffer[j + i * m_outputWidth] = data[index];
                 }
                 xL -= dL;
