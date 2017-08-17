@@ -491,6 +491,8 @@ int main()
         outtextxy(10, 30, buffer);
     }
 
+    delimage(pimg);
+    delimage(target);
     closegraph();
     return 0;
 }
