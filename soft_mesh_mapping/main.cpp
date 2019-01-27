@@ -3,7 +3,6 @@
 //dependency: Easy Graphics Engine: http://xege.org or https://github.com/misakamm/xege
 //tips: This demo is compatible with vc6.0. Just create a project and copy the source code.
 
-#define SHOW_CONSOLE
 #define _CRT_SECURE_NO_WARNINGS
 #include <graphics.h>
 #include <vector>
