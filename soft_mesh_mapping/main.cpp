@@ -10,7 +10,12 @@
 #include <cmath>
 #include <cassert>
 #include <cstdio>
+
+#define PRINT_FPS 0
+
+#if PRINT_FPS
 #include <chrono>
+#endif
 
 using namespace std;
 
@@ -22,6 +27,34 @@ struct Point
     float dx, dy;
     float u, v;
 };
+
+
+void my_line(int* data, int width, int height, int pnt1x, int pnt1y, int pnt2x, int pnt2y, int color)
+{
+    int dx = pnt2x - pnt1x;
+    int dy = pnt2y - pnt1y;
+    float x = pnt1x;
+    float y = pnt1y;
+    int step = 0;
+    if(abs(dx) > abs(dy))
+    {
+        step = abs(dx);
+    }
+    else
+    {
+        step = abs(dy);
+    }
+    float xStep = dx / (float)step;
+    float yStep = dy / (float)step;
+    for(int i = 0; i < step; i++)
+    {
+        x += xStep;
+        y += yStep;
+        if(x < 0 || y < 0 || x >= width || y >= height)
+            continue;
+        data[(int)x + (int)y * width] = color;
+    }
+}
 
 class Net
 {
@@ -335,9 +368,7 @@ public:
             }
         }
 
-        auto start = std::chrono::high_resolution_clock::now();
-
-        //color_t* bufferData = (color_t*)getbuffer(m_outputTarget);
+        color_t* outputBuffer = (color_t*)getbuffer(m_outputTarget);
 
         if(m_lastIndex > 0)
         {
@@ -348,7 +379,7 @@ public:
                 {
                     const int h = k + j;
                     //line(v[h - 1].x, v[h - 1].y, v[h].x, v[h].y, m_outputTarget);
-                    ege_line(v[h - 1].x, v[h - 1].y, v[h].x, v[h].y, m_outputTarget);
+                    my_line((int*)outputBuffer, m_outputWidth, m_outputHeight, v[h - 1].x, v[h - 1].y, v[h].x, v[h].y, 0x00ffff00);
                 }
             }
 
@@ -359,14 +390,10 @@ public:
                     const int h2 = j * m_width + i;
                     const int h1 = (j - 1) * m_width + i;
                     //line(v[h1].x, v[h1].y, v[h2].x, v[h2].y, m_outputTarget);
-                    ege_line(v[h1].x, v[h1].y, v[h2].x, v[h2].y, m_outputTarget);
+                    my_line((int*)outputBuffer, m_outputWidth, m_outputHeight, v[h1].x, v[h1].y, v[h2].x, v[h2].y, 0x00ffff00);
                 }
             }
         }
-
-        // auto end = std::chrono::high_resolution_clock::now();
-        // auto dur = (end - start).count() / 1.e6;
-        // printf("画线时间 %g ms\n", dur);
     }
 
     void intensityInc(float f)
@@ -423,7 +450,7 @@ bool readFileNameDlg(LPSTR filename, LPCSTR title)
 
 PIMAGE loadTexture(const char* filename)
 {
-    char buffer[1024] = {};
+    char buffer[1024] = {0};
     PIMAGE pimg = NULL;
 
     if(filename != NULL && *filename != '\0')
@@ -474,9 +501,10 @@ int main(int argv, char** argc)
     sprintf(buffer, showMsgRule, net.getIntensity());
     net.initNet(80, 60, pimg, target);
 
+#if PRINT_FPS
     std::chrono::high_resolution_clock::time_point lastTime = std::chrono::high_resolution_clock::now();
-
     int frames = 0;
+#endif
 
     for(; is_run(); delay_fps(60))
     {
@@ -487,7 +515,6 @@ int main(int argv, char** argc)
             int x, y;
             mousepos(&x, &y);
             net.catchPoint(x / 800.0f, y / 600.0f);
-            // puts("has mouse");
         }
         else
         {
@@ -520,6 +547,7 @@ int main(int argv, char** argc)
         outtextxy(10, 10, infoMsg);
         outtextxy(10, 30, buffer);
 
+#if PRINT_FPS
 
         ++frames;
         std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
@@ -530,6 +558,7 @@ int main(int argv, char** argc)
             printf("FPS: %d\n", frames);
             frames = 0;
         }
+#endif
     }
 
     delimage(pimg);
