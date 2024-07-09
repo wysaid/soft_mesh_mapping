@@ -1,14 +1,16 @@
 ﻿//By wysaid
 //blog: http://wysaid.org
-//dependency: Easy Graphics Engine: http://xege.org or https://github.com/misakamm/xege
-//tips: This demo is compatible with vc6.0. Just create a project and copy the source code.
+//dependency: Easy Graphics Engine: https://github.com/misakamm/xege/ or http://xege.org
+//tips: 本次demo兼容vc6.0, 直接复制下方代码运行即可
 
+#define SHOW_CONSOLE
 #define _CRT_SECURE_NO_WARNINGS
 #include <graphics.h>
 #include <vector>
 #include <cmath>
 #include <cassert>
 #include <cstdio>
+#include <chrono>
 
 using namespace std;
 
@@ -219,10 +221,14 @@ public:
                     float v = vL + vLen * percent;
                     if(u < 0 || v < 0 || u > 1 || v > 1 || i < 0 || j < 0 || i >= m_outputHeight || j >= m_outputWidth)
                         continue;
+
                     int ww = u * m_texWidth;
                     int hh = v * m_texHeight;
-                    int index = ww + hh * m_texWidth;                    
-                    outputBuffer[j + i * m_outputWidth] = data[index];
+                    if (ww == m_texWidth) ww = m_texWidth - 1; ///< 防止越界
+                    if (hh == m_texHeight) hh = m_texHeight - 1; ///< 防止越界
+                    int index = ww + hh * m_texWidth;
+                    int outputIndex = j + i * m_outputWidth;
+                    outputBuffer[outputIndex] = data[index];
                 }
                 xL += dL;
                 xR += dR;
@@ -248,6 +254,8 @@ public:
                         continue;
                     int ww = u * m_texWidth;
                     int hh = v * m_texHeight;
+                    if (ww == m_texWidth) ww = m_texWidth - 1; ///< 防止越界
+                    if (hh == m_texHeight) hh = m_texHeight - 1; ///< 防止越界
                     int index = ww + hh * m_texWidth;
                     outputBuffer[j + i * m_outputWidth] = data[index];
                 }
@@ -327,6 +335,10 @@ public:
             }
         }
 
+        auto start = std::chrono::high_resolution_clock::now();
+
+        //color_t* bufferData = (color_t*)getbuffer(m_outputTarget);
+
         if(m_lastIndex > 0)
         {
             for(i = 0; i != m_height; ++i)
@@ -335,7 +347,8 @@ public:
                 for(int j = 1; j != m_width; ++j)
                 {
                     const int h = k + j;
-                    line(v[h - 1].x, v[h - 1].y, v[h].x, v[h].y, m_outputTarget);
+                    //line(v[h - 1].x, v[h - 1].y, v[h].x, v[h].y, m_outputTarget);
+                    ege_line(v[h - 1].x, v[h - 1].y, v[h].x, v[h].y, m_outputTarget);
                 }
             }
 
@@ -345,10 +358,15 @@ public:
                 {
                     const int h2 = j * m_width + i;
                     const int h1 = (j - 1) * m_width + i;
-                    line(v[h1].x, v[h1].y, v[h2].x, v[h2].y, m_outputTarget);
+                    //line(v[h1].x, v[h1].y, v[h2].x, v[h2].y, m_outputTarget);
+                    ege_line(v[h1].x, v[h1].y, v[h2].x, v[h2].y, m_outputTarget);
                 }
             }
         }
+
+        // auto end = std::chrono::high_resolution_clock::now();
+        // auto dur = (end - start).count() / 1.e6;
+        // printf("画线时间 %g ms\n", dur);
     }
 
     void intensityInc(float f)
@@ -403,10 +421,15 @@ bool readFileNameDlg(LPSTR filename, LPCSTR title)
     return !!GetOpenFileNameA(&ofna);
 }
 
-PIMAGE loadTexture()
+PIMAGE loadTexture(const char* filename)
 {
-    char buffer[1024];
+    char buffer[1024] = {};
     PIMAGE pimg = NULL;
+
+    if(filename != NULL && *filename != '\0')
+    {
+        strcpy(buffer, filename);
+    }
 
     setcolor(RED);
     outtextxy(100, 100, "按任意键选择一张图片才能进入下一步");
@@ -415,7 +438,10 @@ PIMAGE loadTexture()
     {
         getch();
 
-        if(readFileNameDlg(buffer, "Please choose an image file!"))
+        if(*buffer == '\0')
+            readFileNameDlg(buffer, "Please choose an image file!");
+
+        if(*buffer != '\0')
         {
             pimg = newimage();
             int ret = getimage(pimg, buffer);
@@ -430,23 +456,27 @@ PIMAGE loadTexture()
     return pimg;
 }
 
-int main()
+int main(int argv, char** argc)
 {
     const char* showMsgRule = "使用鼠标拖动可变换网格. 当前网格强度：%g";
     const char* infoMsg = "按'+'或者'-'可以增大或者减小网格弹力！这个版本由wysaid制作， 参见: http://blog.wysaid.org";
-    const char* titleMsg = "EGE网格 By wysaid";
+    const char* titleMsg = "EGE网格 By wysaid - 2024";
 
     initgraph(800, 600, INIT_RENDERMANUAL);
     setcaption(titleMsg);
 
     Net net;
     char buffer[1024];
-    PIMAGE pimg = loadTexture();
+    PIMAGE pimg = loadTexture(argv > 1 ? argc[1] : NULL);
     PIMAGE target = newimage(getwidth(), getheight());
 
     setcolor(YELLOW, target);
     sprintf(buffer, showMsgRule, net.getIntensity());
     net.initNet(80, 60, pimg, target);
+
+    std::chrono::high_resolution_clock::time_point lastTime = std::chrono::high_resolution_clock::now();
+
+    int frames = 0;
 
     for(; is_run(); delay_fps(60))
     {
@@ -457,6 +487,7 @@ int main()
             int x, y;
             mousepos(&x, &y);
             net.catchPoint(x / 800.0f, y / 600.0f);
+            // puts("has mouse");
         }
         else
         {
@@ -488,6 +519,17 @@ int main()
         setcolor(0x00ff0000);
         outtextxy(10, 10, infoMsg);
         outtextxy(10, 30, buffer);
+
+
+        ++frames;
+        std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
+        auto dur = (currentTime - lastTime).count() / 1.e6;
+        if(dur >= 1000)
+        {
+            lastTime = currentTime;
+            printf("FPS: %d\n", frames);
+            frames = 0;
+        }
     }
 
     delimage(pimg);
