@@ -20,11 +20,7 @@ set(MY_TARGET_NAME soft-mesh-mapping)
 
 project(${MY_PROJECT_NAME} LANGUAGES CXX)
 
-file(GLOB DEMO_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/soft_mesh_mapping/*.cpp)
-
-message("DEMO_SOURCE: ${DEMO_SOURCE}")
-
-add_executable(${MY_TARGET_NAME} ${DEMO_SOURCE})
+add_executable(${MY_TARGET_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/soft_mesh_mapping.cpp)
 
 target_include_directories(${MY_TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ege/include)
 
