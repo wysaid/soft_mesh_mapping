@@ -255,10 +255,8 @@ public:
                     if(u < 0 || v < 0 || u > 1 || v > 1 || i < 0 || j < 0 || i >= m_outputHeight || j >= m_outputWidth)
                         continue;
 
-                    int ww = u * m_texWidth;
-                    int hh = v * m_texHeight;
-                    if (ww == m_texWidth) ww = m_texWidth - 1; ///< 防止越界
-                    if (hh == m_texHeight) hh = m_texHeight - 1; ///< 防止越界
+                    int ww = u * (m_texWidth - 1);
+                    int hh = v * (m_texHeight - 1);
                     int index = ww + hh * m_texWidth;
                     int outputIndex = j + i * m_outputWidth;
                     outputBuffer[outputIndex] = data[index];
@@ -285,10 +283,8 @@ public:
                     float v = vL + vLen * percent;
                     if(u < 0 || v < 0 || u > 1 || v > 1 || i < 0 || j < 0 || i >= m_outputHeight || j >= m_outputWidth)
                         continue;
-                    int ww = u * m_texWidth;
-                    int hh = v * m_texHeight;
-                    if (ww == m_texWidth) ww = m_texWidth - 1; ///< 防止越界
-                    if (hh == m_texHeight) hh = m_texHeight - 1; ///< 防止越界
+                    int ww = u * (m_texWidth - 1);
+                    int hh = v * (m_texHeight - 1);
                     int index = ww + hh * m_texWidth;
                     outputBuffer[j + i * m_outputWidth] = data[index];
                 }
