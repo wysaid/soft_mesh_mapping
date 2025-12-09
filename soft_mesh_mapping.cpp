@@ -11,6 +11,24 @@
 #include <cassert>
 #include <cstdio>
 
+// 文本本地化宏定义 - Text Localization Macros
+// System dialog titles remain in English for compatibility
+#define TEXT_CHOOSE_IMAGE_TITLE "Please choose an image file!"
+
+#ifdef _MSC_VER
+// MSVC编译器使用中文文案
+#define TEXT_WINDOW_TITLE       "EGE网格 By wysaid - 2025"
+#define TEXT_LOAD_IMAGE_PROMPT  "按任意键选择一张图片才能进入下一步"
+#define TEXT_SHOW_MSG_RULE      "使用鼠标拖动可变换网格. 当前网格强度：%g"
+#define TEXT_INFO_MSG           "按'+'或者'-'可以增大或者减小网格弹力！这个版本由wysaid制作， 参见: http://blog.wysaid.org"
+#else
+// 非MSVC编译器使用英文文案
+#define TEXT_WINDOW_TITLE       "EGE Mesh by wysaid - 2025"
+#define TEXT_LOAD_IMAGE_PROMPT  "Press any key to select an image to proceed"
+#define TEXT_SHOW_MSG_RULE      "Drag with mouse to deform mesh. Current mesh intensity: %g"
+#define TEXT_INFO_MSG           "Press '+' or '-' to increase or decrease mesh elasticity! Made by wysaid, see: http://blog.wysaid.org"
+#endif
+
 #define PRINT_FPS 0
 
 #if PRINT_FPS
@@ -455,14 +473,14 @@ PIMAGE loadTexture(const char* filename)
     }
 
     setcolor(RED);
-    outtextxy(100, 100, "按任意键选择一张图片才能进入下一步");
+    outtextxy(100, 100, TEXT_LOAD_IMAGE_PROMPT);
 
     do
     {
         getch();
 
         if(*buffer == '\0')
-            readFileNameDlg(buffer, "Please choose an image file!");
+            readFileNameDlg(buffer, TEXT_CHOOSE_IMAGE_TITLE);
 
         if(*buffer != '\0')
         {
@@ -481,12 +499,8 @@ PIMAGE loadTexture(const char* filename)
 
 int main(int argv, char** argc)
 {
-    const char* showMsgRule = "使用鼠标拖动可变换网格. 当前网格强度：%g";
-    const char* infoMsg = "按'+'或者'-'可以增大或者减小网格弹力！这个版本由wysaid制作， 参见: http://blog.wysaid.org";
-    const char* titleMsg = "EGE网格 By wysaid - 2024";
-
     initgraph(800, 600, INIT_RENDERMANUAL);
-    setcaption(titleMsg);
+    setcaption(TEXT_WINDOW_TITLE);
 
     Net net;
     char buffer[1024];
@@ -494,7 +508,7 @@ int main(int argv, char** argc)
     PIMAGE target = newimage(getwidth(), getheight());
 
     setcolor(YELLOW, target);
-    sprintf(buffer, showMsgRule, net.getIntensity());
+    sprintf(buffer, TEXT_SHOW_MSG_RULE, net.getIntensity());
     net.initNet(80, 60, pimg, target);
 
 #if PRINT_FPS
@@ -532,7 +546,7 @@ int main(int argv, char** argc)
                 exit(0);
             }
             flushkey();
-            sprintf(buffer, showMsgRule, net.getIntensity());
+            sprintf(buffer, TEXT_SHOW_MSG_RULE, net.getIntensity());
         }
 
         setcolor(GREEN);
@@ -540,7 +554,7 @@ int main(int argv, char** argc)
         net.update();
         putimage(0, 0, target);
         setcolor(0x00ff0000);
-        outtextxy(10, 10, infoMsg);
+        outtextxy(10, 10, TEXT_INFO_MSG);
         outtextxy(10, 30, buffer);
 
 #if PRINT_FPS
