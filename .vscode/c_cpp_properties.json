@@ -51,6 +51,9 @@
             "cStandard": "c11",
             "cppStandard": "c++17",
             "compilerPath": "${default}",
+            "compilerArgs": [
+                "/Zc:__cplusplus"
+            ],
             "includePath": [
                 "${myDefaultIncludePath}",
                 "SHOW_CONSOLE=1"

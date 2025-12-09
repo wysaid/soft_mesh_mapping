@@ -8,7 +8,7 @@
             "name": "Launch Debug",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/soft-mesh-mapping.exe",
+            "program": "${workspaceFolder}/build/Debug/ege-demo.exe",
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build",
             "environment": [],
@@ -19,7 +19,7 @@
                 "program": "/bin/bash",
                 "args": [
                     "-c",
-                    "echo Run ${workspaceFolder}/build/soft-mesh-mapping.exe done."
+                    "echo Run ${workspaceFolder}/build/ege-demo.exe done."
                 ],
             },
             "windows": {
@@ -30,7 +30,7 @@
             "name": "Launch Release",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Release/soft-mesh-mapping.exe",
+            "program": "${workspaceFolder}/build/Release/ege-demo.exe",
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build",
             "environment": [],
@@ -41,7 +41,7 @@
                 "program": "/bin/bash",
                 "args": [
                     "-c",
-                    "echo Run ${workspaceFolder}/build/soft-mesh-mapping.exe done."
+                    "echo Run ${workspaceFolder}/build/ege-demo.exe done."
                 ],
             },
             "windows": {
