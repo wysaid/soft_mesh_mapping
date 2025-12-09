@@ -1,145 +1,64 @@
 # Soft Mesh Mapping - 软网格映射演示
 
-## 项目简介
-
-一个使用软网格映射技术实现图像变形效果的演示程序。通过鼠标拖拽可以实时交互式地变形图像，展示了网格映射算法和物理模拟的结合。
-
-本项目基于 [EGE (Easy Graphics Engine)](https://github.com/x-ege/xege) 图形库开发，提供了一个简单而有趣的图形学演示案例。
+一个交互式的网格变形演示程序，通过鼠标拖拽实时变形图像。基于物理模拟的弹簧质点模型，展示了网格映射和纹理变换的图形学技术。
 
 ## 功能特性
 
-- ✨ 实时交互式的网格变形效果
-- 🖱️ 鼠标拖拽实现直观的图像变形操作
-- ⚙️ 可调节的网格弹性强度
-- 🎨 支持多种图片格式（JPG、PNG、BMP、GIF）
-- 🎯 基于物理模拟的平滑动画效果
+- 📌 实时交互式网格变形：鼠标拖拽网格节点，图像随之变形
+- 🔧 可调节的弹性强度：通过 `+` / `-` 键调整网格的弹力系数
+- 🎨 支持多种图片格式：JPG、PNG、BMP、GIF
+- 🖼️ 流畅的视觉效果：基于三角形网格的高效渲染
 
-## 依赖库
+## 算法原理
 
-本项目依赖于 **EGE (Easy Graphics Engine)** 图形库：
+### 网格映射
 
-- **项目地址**: https://github.com/x-ege/xege
-- **官方网站**: http://xege.org
-- **说明**: EGE 是一个简单易用的图形库，专为初学者设计，提供了便捷的图形绘制、图像处理、窗口管理等功能。它基于 Windows GDI+，可以在 Windows 平台上快速开发图形应用程序。
+将图像划分为规则的四边形网格结构，每个网格单元由两个三角形组成，共享对角线。这样可以在保持结构化的同时实现灵活的变形。
 
-本仓库已包含 EGE 库的必要文件（头文件和静态库），位于 `ege/` 目录下，支持多种编译器和平台：
-- MSVC (Visual Studio 2010/2015/2017/2019/2022)
-- MinGW-w64
-- 支持 x86 和 x64 架构
+### 物理模拟
 
-## 编译环境
+采用弹簧质点模型（Spring-Mass Model）：
 
-### 支持的编译器
+- 网格的节点作为质点，节点之间的连接是弹簧
+- 每个质点受到周围弹簧的拉力、阻尼力和用户交互力的作用
+- 通过数值积分（Verlet 积分）实时更新节点位置
+- 弹性强度参数控制弹簧的劲度系数，影响变形的柔软程度
 
-- **MSVC**: Visual Studio 2015 或更高版本（推荐使用 VS2019/VS2022）
-- **MinGW-w64**: GCC 编译器（支持交叉编译）
-- **C++ 标准**: C++14 或更高（VS2017+ 使用 C++17）
+### 纹理映射
 
-### 构建要求
+使用重心坐标（Barycentric Coordinates）进行三角形纹理映射：
 
-- CMake 3.13 或更高版本
-- Windows 平台（或使用交叉编译工具）
+- 对于变形后的三角形，计算其内部像素点在原始三角形中的重心坐标
+- 利用重心坐标在纹理坐标空间中的对应位置采样原始图像
+- 通过双线性插值保证采样的平滑性和连续性
 
-## 编译步骤
+## 快速开始
 
-### 使用 CMake（推荐）
+### 构建项目
 
 ```bash
-# 创建构建目录
 mkdir build
 cd build
-
-# 配置项目
 cmake ..
-
-# 编译
 cmake --build . --config Release
 ```
 
-### 使用 Visual Studio
+### 运行程序
 
-```bash
-# 生成 Visual Studio 项目
-mkdir build
-cd build
-cmake .. -G "Visual Studio 16 2019" -A x64
+编译完成后，可执行文件在 `build/Release/` 目录下。
 
-# 使用 Visual Studio 打开生成的 .sln 文件进行编译
-```
+**操作方式**：
 
-### 交叉编译（Linux 环境编译 Windows 程序）
+- 鼠标左键拖拽：变形网格
+- `+` 键：增大弹性强度
+- `-` 键：减小弹性强度
+- `ESC` 键：退出程序
 
-```bash
-mkdir build
-cd build
-cmake ..
-make
-```
+## 依赖
 
-## 使用说明
-
-### 启动程序
-
-```bash
-./soft-mesh-mapping [图片路径]
-```
-
-如果不指定图片路径，程序会提示选择一张图片文件。
-
-### 操作方法
-
-- **鼠标左键拖拽**: 拖动网格节点，实时变形图像
-- **+ 键**: 增大网格弹性强度
-- **- 键**: 减小网格弹性强度
-- **ESC 键**: 退出程序
-
-## 运行截图
-
-![软网格映射效果 1](https://raw.githubusercontent.com/wysaid/soft_mesh_mapping/master/screenshot0.jpg)
-
-![软网格映射效果 2](https://raw.githubusercontent.com/wysaid/soft_mesh_mapping/master/screenshot1.jpg)
-
-## 技术说明
-
-### 核心算法
-
-- **网格映射**: 将图像划分为网格，每个网格单元由三角形组成
-- **物理模拟**: 使用弹簧质点模型模拟网格的弹性变形
-- **纹理映射**: 基于重心坐标的三角形纹理映射
-- **实时渲染**: 60 FPS 的流畅交互体验
-
-### 代码特性
-
-- 兼容多种编译器（MSVC / MinGW / GCC）
-- UTF-8 编码支持，避免乱码问题
-- 双语支持：MSVC 编译显示中文，其他编译器显示英文
-- 向后兼容：代码结构支持 VC6.0 等老版本编译器
-
-## 项目结构
-
-```
-soft_mesh_mapping/
-├── soft_mesh_mapping.cpp    # 主程序源代码
-├── CMakeLists.txt            # CMake 构建配置
-├── README.md                 # 项目说明文档
-├── ege/                      # EGE 图形库
-│   ├── include/              # 头文件
-│   └── lib/                  # 静态库文件
-├── screenshot0.jpg           # 效果截图 1
-└── screenshot1.jpg           # 效果截图 2
-```
-
-## 作者信息
-
-- **作者**: wysaid
-- **博客**: http://wysaid.org
-- **项目主页**: https://github.com/wysaid/soft_mesh_mapping
-
-## 许可证
-
-本项目仅供学习和参考使用。
+本项目使用 [EGE (Easy Graphics Engine)](https://github.com/x-ege/xege) 图形库。必要的头文件和库文件已包含在 `ege/` 目录中，支持多个编译器版本（MSVC、MinGW-w64 等）。
 
 ## 相关链接
 
-- [EGE 图形库官方仓库](https://github.com/x-ege/xege)
-- [作者博客](http://blog.wysaid.org)
+- [作者博客](http://wysaid.org)
+- [EGE 图形库](https://github.com/x-ege/xege)
