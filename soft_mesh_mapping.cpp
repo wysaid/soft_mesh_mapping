@@ -17,13 +17,13 @@
 
 #ifdef _MSC_VER
 // MSVC编译器使用中文文案
-#define TEXT_WINDOW_TITLE       "EGE网格 By wysaid - 2024"
+#define TEXT_WINDOW_TITLE       "EGE网格 By wysaid - 2025"
 #define TEXT_LOAD_IMAGE_PROMPT  "按任意键选择一张图片才能进入下一步"
 #define TEXT_SHOW_MSG_RULE      "使用鼠标拖动可变换网格. 当前网格强度：%g"
 #define TEXT_INFO_MSG           "按'+'或者'-'可以增大或者减小网格弹力！这个版本由wysaid制作， 参见: http://blog.wysaid.org"
 #else
 // 非MSVC编译器使用英文文案
-#define TEXT_WINDOW_TITLE       "EGE Mesh by wysaid - 2024"
+#define TEXT_WINDOW_TITLE       "EGE Mesh by wysaid - 2025"
 #define TEXT_LOAD_IMAGE_PROMPT  "Press any key to select an image to proceed"
 #define TEXT_SHOW_MSG_RULE      "Drag with mouse to deform mesh. Current mesh intensity: %g"
 #define TEXT_INFO_MSG           "Press '+' or '-' to increase or decrease mesh elasticity! Made by wysaid, see: http://blog.wysaid.org"
